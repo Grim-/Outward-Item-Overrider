@@ -3,7 +3,17 @@ An Attempt at providing a Simple Method of Modding Item Stats (Weapons, Armour, 
 
 It is in the early stages, so currently it only supports Weapon stats.
 
+
+Simply Include the OutwardItemOverrider.dll as you would any other Partiality mod then create a .json formatted as below in Outward/Mods/Overrides (Create the folder if it does not exist).
+
+
+#### ItemID = ID of the item to Modify
+#### Type = The Type of the item you want to modify (Only weapon supported currently)
+#### Overrides = An array of Javascript Objects detailing the Stat Type, The Value to change it to and the Damage Type in the case of Weapon Damage.
+
 All item overrides must be correctly formatted .Json files and be placed in a folder named `"Overrides"` in the Mods folder (Outward/Mods/Overrides) the itemID and type are required.
+
+Then on game load your modifications will be applied to the item.
 
 For example the below file makes three modifications to the weapons stats changing the physical damage to 2, ethereal damage to 200 and impact to 10.
 
