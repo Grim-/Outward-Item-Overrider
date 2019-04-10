@@ -42,6 +42,8 @@ You can copy this into a new file and change the ID and values to get started, s
 
 ## Currently Supported Weapon Stats
 
+If you are editing a Weapon's Damage Stats you must include the "weapon_damage_type" : "physical" (Get supported Damage Types below, type in lower case)
+
 #### DAMAGE Types  
     * Physical
     * Ethereal,
@@ -58,4 +60,4 @@ You can copy this into a new file and change the ID and values to get started, s
 	* SPEED
 
 
-If you are editing a Weapon's Damage Stats you must include the "weapon_damage_type" : "physical" (Get supported Damage Types above type in lower case)
+
