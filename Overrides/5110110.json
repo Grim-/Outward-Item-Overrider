@@ -1,0 +1,9 @@
+{
+	"itemID" : 5110110,
+	"type" : "weapon",
+	"overrides" : [
+		{"weapon_stat_type" : "Impact", "value" : 10},
+		{"weapon_stat_type" : "Damage", "weapon_damage_type" : "physical", "value" : 2},
+		{"weapon_stat_type" : "Damage", "weapon_damage_type" : "ethereal", "value" : 200}
+	]
+}
