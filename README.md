@@ -59,6 +59,17 @@ If you are editing a Weapon's Damage Stats you must include the "weapon_damage_t
 	* STAMINA_COST,
 	* REACH,
 	* SPEED
+	* HEALTH_BONUS,
+        * POUCH_BONUS,
+        * HEAT_PROTECTION,
+        * COLD_PROTECTION,
+        * IMPACT_PROTECTION,
+        * CORRUPTION_PROTECTION,
+        * WATER_PROOF,
+        * MOVEMENT_PENALTY,
+        * STAMINA_USE_PENALTY,
+        * HEAT_REGEN_PENALTY,
+        * MANA_USE_MODIFIER
 
 
 
