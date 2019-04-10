@@ -42,8 +42,7 @@ You can copy this into a new file and change the ID and values to get started, s
 
 ## Currently Supported Weapon Stats
 
-#### DAMAGE - 
-#### Types
+#### DAMAGE Types  
     * Physical
     * Ethereal,
     * Decay,
