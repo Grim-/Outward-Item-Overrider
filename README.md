@@ -1,23 +1,14 @@
-# Outward Item Overrider
-An Attempt at providing a Simple Method of Modding Item Stats (Weapons, Armour, Bags) in Outward via .JSON file.
+# Outward Item Overrider 
 
-It is in the early stages, so currently it only supports Weapon stats.
+An attempt at providing a simple method of Modifying Item Stats (Weapons, Armour, Bags) in Outward via JSON files.
 
-
-Simply Include the OutwardItemOverrider.dll as you would any other Partiality mod then create a .json formatted as below in Outward/Mods/Overrides (Create the folder if it does not exist).
+It is in the early stages, so currently it only supports Weapon stats but with plans to support most Item types.
 
 
-#### ItemID = ID of the item to Modify
-#### Type = The Type of the item you want to modify (Only weapon supported currently)
-#### Overrides = An array of Javascript Objects detailing the Stat Type, The Value to change it to and the Damage Type in the case of Weapon Damage.
 
-All item overrides must be correctly formatted .Json files and be placed in a folder named `"Overrides"` in the Mods folder (Outward/Mods/Overrides) the itemID and type are required.
+#### Getting Started
 
-Then on game load your modifications will be applied to the item.
-
-For example the below file makes three modifications to the weapons stats changing the physical damage to 2, ethereal damage to 200 and impact to 10.
-
-You can copy this into a new file and change the ID and values to get started, simply make sure the .JSON file is in the correct folder (above)
+> Simply Include the OutwardItemOverrider.dll as you would any other Partiality mod then create a .json formatted as below in Outward/Mods/Overrides (Create the folder if it does not exist).
 
 ```javascript
 //5110110.Json (PistolHandCannon)
@@ -33,6 +24,17 @@ You can copy this into a new file and change the ID and values to get started, s
 }`
 
 ```
+
+
+All item overrides must be correctly formatted .Json files and be placed in a folder named "Overrides" within the Mods folder `(Outward/Mods/Overrides)` and contain the ItemID and Item Type.
+
+Once the game has loaded the .dll will check for any json files in the Overrides folder and apply them to the item.
+
+For example the below file makes three modifications to the weapons stats changing the physical damage to 2, ethereal damage to 200 and impact to 10.
+
+You can copy this into a new file and change the ID and values to get started, simply make sure the .JSON file is in the correct folder (above)
+
+
 ## Currently Supported Types
 #### Weapon - Half way
 #### Armour - TODO
