@@ -19,7 +19,8 @@ For example the below file makes three modifications to the weapons stats changi
 
 You can copy this into a new file and change the ID and values to get started, simply make sure the .JSON file is in the correct folder (above)
 
-`//5110110.Json (PistolHandCannon)
+```javascript
+//5110110.Json (PistolHandCannon)
 
 {
 	"itemID" : 5110110,
@@ -31,29 +32,29 @@ You can copy this into a new file and change the ID and values to get started, s
 	]
 }`
 
+```
+## Currently Supported Types
+#### Weapon - Half way
+#### Armour - TODO
+#### Bag - TODO
+#### Skills -TODO
 
-##Currently Supported Types
-###Weapon - Half way
-###Armour - TODO
-###Bag - TODO
-###Skills -TODO
 
+## Currently Supported Weapon Stats
 
-##Currently Supported Weapon Stats
+#### DAMAGE - 
+#### Types
+    * Physical
+    * Ethereal,
+    * Decay,
+    * Electric,
+    * Frost,
+    * Fire
 
-###DAMAGE - 
-####Types
-    Physical,
-    Ethereal,
-    Decay,
-    Electric,
-    Frost,
-    Fire
-
-###IMPACT,
-###STAMINA_COST,
-###REACH,
-###SPEED
+#### IMPACT,
+#### STAMINA_COST,
+#### REACH,
+#### SPEED
 
 
 If you are editing a Weapon's Damage Stats you must include the "weapon_damage_type" : "physical" (Get supported Damage Types above type in lower case)
