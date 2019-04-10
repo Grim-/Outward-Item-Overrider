@@ -10,6 +10,10 @@ It is in the early stages, so currently it only supports Weapon stats but with p
 
 > Simply Include the OutwardItemOverrider.dll as you would any other Partiality mod then create a .json formatted as below in Outward/Mods/Overrides (Create the folder if it does not exist).
 
+> For example the below file makes three modifications to the weapons stats changing the physical damage to 2, ethereal damage to 200 and impact to 10.
+
+> You can copy this into a new file and change the ID and values to get started, simply make sure the .JSON file is in the correct folder (above)
+
 ```javascript
 //5110110.Json (PistolHandCannon)
 
@@ -29,11 +33,6 @@ It is in the early stages, so currently it only supports Weapon stats but with p
 All item overrides must be correctly formatted .Json files and be placed in a folder named "Overrides" within the Mods folder `(Outward/Mods/Overrides)` and contain the ItemID and Item Type.
 
 Once the game has loaded the .dll will check for any json files in the Overrides folder and apply them to the item.
-
-For example the below file makes three modifications to the weapons stats changing the physical damage to 2, ethereal damage to 200 and impact to 10.
-
-You can copy this into a new file and change the ID and values to get started, simply make sure the .JSON file is in the correct folder (above)
-
 
 ## Currently Supported Types
 #### Weapon - Half way
