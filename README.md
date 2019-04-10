@@ -50,10 +50,12 @@ You can copy this into a new file and change the ID and values to get started, s
     * Frost,
     * Fire
 
-#### IMPACT,
-#### STAMINA_COST,
-#### REACH,
-#### SPEED
+
+#### Weapon Stats
+	* IMPACT,
+	* STAMINA_COST,
+	* REACH,
+	* SPEED
 
 
 If you are editing a Weapon's Damage Stats you must include the "weapon_damage_type" : "physical" (Get supported Damage Types above type in lower case)
