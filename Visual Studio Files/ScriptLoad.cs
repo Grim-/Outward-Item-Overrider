@@ -149,128 +149,16 @@ namespace OutwardItemOverrider
             var weaponStatComponent = itemToChange.GetComponent<WeaponStats>();
             var damageType = weaponOverride.weaponDamageType;
 
+            ModifyWeaponDamage(itemToChange, damageType, itemOverride.value);
 
-            switch (damageType)
-            {
-                case WeaponDamageType.Physical:
-                    if (CheckWeaponHasDamageType(itemToChange, DamageType.Types.Physical))
-                    {
-                        Debug.Log("Weapon Has Physical Damage Type updating value");
-                        ModifyWeaponDamage(itemToChange, DamageType.Types.Physical, itemOverride.value);
-                    }
-                    else
-                    {
-                        Debug.Log("Weapon Has No Physical Damage Type adding value");
-                        AddDamageTypeToWeapon(itemToChange, DamageType.Types.Physical, itemOverride.value);
-                    }
-
-                    break;
-                case WeaponDamageType.Ethereal:
-                    if (CheckWeaponHasDamageType(itemToChange, DamageType.Types.Ethereal))
-                    {
-                        Debug.Log("Weapon Has Etheral Damage Type updating value");
-                        ModifyWeaponDamage(itemToChange, DamageType.Types.Ethereal, itemOverride.value);
-                    }
-                    else
-                    {
-                        Debug.Log("Weapon Has No Etheral Damage Type adding value");
-                        AddDamageTypeToWeapon(itemToChange, DamageType.Types.Ethereal, itemOverride.value);
-                    }
-
-                    break;
-                case WeaponDamageType.Decay:
-                    if (CheckWeaponHasDamageType(itemToChange, DamageType.Types.Decay))
-                    {
-                        Debug.Log("Weapon Has Decay Damage Type updating value");
-                        ModifyWeaponDamage(itemToChange, DamageType.Types.Decay, itemOverride.value);
-                    }
-                    else
-                    {
-                        Debug.Log("Weapon Has No Decay Damage Type adding value");
-                        AddDamageTypeToWeapon(itemToChange, DamageType.Types.Decay, itemOverride.value);
-                    }
-                    break;
-                case WeaponDamageType.Electric:
-                    if (CheckWeaponHasDamageType(itemToChange, DamageType.Types.Electric))
-                    {
-                        Debug.Log("Weapon Has Electric Damage Type updating value");
-                        ModifyWeaponDamage(itemToChange, DamageType.Types.Electric, itemOverride.value);
-                    }
-                    else
-                    {
-                        Debug.Log("Weapon Has No Electric Damage Type adding value");
-                        AddDamageTypeToWeapon(itemToChange, DamageType.Types.Electric, itemOverride.value);
-                    }
-                    break;
-                case WeaponDamageType.Frost:
-                    if (CheckWeaponHasDamageType(itemToChange, DamageType.Types.Frost))
-                    {
-                        Debug.Log("Weapon Has Frost Damage Type updating value");
-                        ModifyWeaponDamage(itemToChange, DamageType.Types.Frost, itemOverride.value);
-                    }
-                    else
-                    {
-                        Debug.Log("Weapon Has No Frost Damage Type adding value");
-                        AddDamageTypeToWeapon(itemToChange, DamageType.Types.Frost, itemOverride.value);
-                    }
-                    break;
-                case WeaponDamageType.Fire:
-                    if (CheckWeaponHasDamageType(itemToChange, DamageType.Types.Fire))
-                    {
-                        Debug.Log("Weapon Has Fire Damage Type updating value");
-                        ModifyWeaponDamage(itemToChange, DamageType.Types.Fire, itemOverride.value);
-                    }
-                    else
-                    {
-                        Debug.Log("Weapon Has No Fire Damage Type adding value");
-                        AddDamageTypeToWeapon(itemToChange, DamageType.Types.Fire, itemOverride.value);
-                    }
-                    break;
-            }
-
-        }
-
-        //To add a new Damage Type to a weapon
-        public void AddDamageTypeToWeapon(Item item, DamageType.Types weaponDamageType, float damageAmount)
-        {
-            var weaponStatComponent = item.GetComponent<WeaponStats>();
-            AddBaseDamageType(item, weaponDamageType);
-            SetAttackStepDamage(weaponStatComponent.Attacks, damageAmount);
-        }
-
-
-        public void AddBaseDamageType(Item item, DamageType.Types weaponDamageType)
-        {
-            var weaponStatComponent = item.GetComponent<WeaponStats>();
-            weaponStatComponent.BaseDamage.Add(weaponDamageType);
-            //get the new count, the new count is the postition of the damage in the current AttackStep.Damage List 
-            Debug.Log(weaponStatComponent.Attacks[0]);
-            Debug.Log(weaponStatComponent.Attacks[0].Damage[0]);
         }
 
         public void ModifyWeaponDamage(Item item, DamageType.Types weaponDamageType, float damageAmount)
         {
             WeaponStats weaponStatComponent = item.GetComponent<WeaponStats>();
-            AttackData[] attackData = weaponStatComponent.Attacks;
-            List<DamageType> damageList = weaponStatComponent.BaseDamage.List;
-
-            int baseDamageTypeCount = weaponStatComponent.BaseDamage.List.Count;
-
-            int currentDamageTypeIndex = 0;
-
-
-            for (int y = 0; y < damageList.Count; y++)
-            {
-                if (damageList[y].Type == weaponDamageType)
-                {
-                    Debug.Log(damageList[y].Type + " is " + y + " index");
-                    currentDamageTypeIndex = y;
-                    break;
-                }
-            }
-
-
-
+            DamageType damageType = new DamageType(weaponDamageType, damageAmount);
+            weaponStatComponent.BaseDamage.Add(damageType);
+            SetAttackStepDamage(weaponStatComponent.Attacks, damageAmount);
         }
 
         //damageIndex is the value returned from BaseDamage
@@ -278,33 +166,19 @@ namespace OutwardItemOverrider
         {
             Debug.Log("Setting Attack Step Damage for each step.");
             Debug.Log("  To " + damageValue);
-
-
             //iterate each attack step in attack data
             for (int i = 0; i < attackData.Length; i++)
             {
-                //set reference to current step
-                var currentAttackStep = attackData[i];
-                //attack step has a damage array each item in the array denotes how much damage this swing does in each type   
+                var currentAttackStep = attackData[i]; 
                 currentAttackStep.Damage.Add(damageValue);
-                //Debug.Log("Damage : (After) " + currentAttackStep.Damage[damageIndex]);
             }
         }
 
 
         public bool CheckWeaponHasDamageType(Item item, DamageType.Types weaponDamageType)
         {
-            var weaponStatComponent = item.GetComponent<WeaponStats>();
-             var damageType = weaponStatComponent.BaseDamage.List.Find(x => x.Type == weaponDamageType);
-
-            if (damageType != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            var damageType = item.GetComponent<WeaponStats>().BaseDamage.List.Find(x => x.Type == weaponDamageType);
+            return damageType != null ? true : false;
         }
 
         public void CheckVariablesToOverride()
@@ -314,15 +188,12 @@ namespace OutwardItemOverrider
             {
                 var itemID = itemOverride.itemID;
                 var item = CheckItemExists(itemID);
-
-
                 if (item != null)
                 {
                     if (!itemsToOverride.ContainsKey(itemOverride))
                     {
                         itemsToOverride.Add(itemOverride, item);
-                    }
-                    
+                    }              
                 }
                 else
                 {
@@ -334,17 +205,13 @@ namespace OutwardItemOverrider
         public object ReflectionGetValue(Type type, object obj, string value)
         {
             FieldInfo fieldInfo = type.GetField(value, BindingFlags.NonPublic | BindingFlags.Instance);
-
             return fieldInfo.GetValue(obj);
         }
 
         public Item CheckItemExists(int itemID)
         {
             ResourcesPrefabManager itemManager = ResourcesPrefabManager.Instance;
-
             var itemToCheck = itemManager.GetItemPrefab(itemID);
-
-
             if (itemToCheck != null)
             {
                 Debug.Log("Item " + itemID + " Exists");
@@ -355,6 +222,7 @@ namespace OutwardItemOverrider
                 Debug.Log("Item " + itemID + " Does Not Exist");
                 return null;
             }
+
         }
 
     }

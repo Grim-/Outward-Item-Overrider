@@ -95,7 +95,7 @@ namespace OutwardItemOverrider
 
                         if (statOverride["weapon_damage_type"])
                         {
-                            overid.weaponDamageType = (WeaponDamageType)Enum.Parse(typeof(WeaponDamageType), statOverride["weapon_damage_type"], true);
+                            overid.weaponDamageType = (DamageType.Types)Enum.Parse(typeof(DamageType.Types), statOverride["weapon_damage_type"], true);
                         }
 
                         variablesToOverride.Add(overid);
@@ -126,7 +126,7 @@ namespace OutwardItemOverrider
     public class WeaponOverride : ItemOverride
     {
         public WeaponStatType weaponStatType;
-        public WeaponDamageType weaponDamageType;
+        public DamageType.Types weaponDamageType;
     }
 
     public enum ItemOverrideType
