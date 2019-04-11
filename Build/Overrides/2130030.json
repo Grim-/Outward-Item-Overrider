@@ -1,0 +1,7 @@
+{
+    "itemID" : 2010020,
+    "type" : "weapon",
+    "overrides" : [
+        {"weapon_stat_type" : "Damage", "weapon_damage_type" : "fire", "value" : 3000}
+    ]
+}
