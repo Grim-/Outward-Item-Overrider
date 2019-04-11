@@ -106,15 +106,20 @@ namespace OutwardItemOverrider
                     weaponStatComponent.AttackSpeed = itemOverride.value;
                     break;
                 case WeaponStatType.HEALTH_BONUS:
+
                     Debug.Log("Updating Weapon Health Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var hpBonus = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_maxHealthBonus");
+                    Debug.Log("Max HP bonus " + hpBonus);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_maxHealthBonus" );
 
-                    var value = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_maxHealthBonus");
-
-                    Debug.Log("Max HP bonus " + value);
-
-                    weaponStatComponent.AttackSpeed = itemOverride.value;
                     break;
                 case WeaponStatType.POUCH_BONUS:
+
+                    Debug.Log("Updating Weapon Pouch Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var pouchBonus = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_pouchCapacityBonus");
+                    Debug.Log("Pouch Bonus " + pouchBonus);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_pouchCapacityBonus");
+
                     break;
                 case WeaponStatType.HEAT_PROTECTION:
                     break;
@@ -200,6 +205,13 @@ namespace OutwardItemOverrider
                     Debug.Log("Could not find Item by ID " + itemID + " in Resources Prefab Manager");
                 }
             }
+        }
+
+
+        public void ReflectionSetValue<T>(T value, Type type, object obj, string field)
+        {
+            FieldInfo fieldInfo = type.GetField(field, BindingFlags.NonPublic | BindingFlags.Instance);
+            fieldInfo.SetValue(obj, value);
         }
 
         public object ReflectionGetValue(Type type, object obj, string value)

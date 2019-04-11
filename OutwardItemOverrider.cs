@@ -42,7 +42,7 @@ namespace OutwardItemOverrider
 
         public override void OnDisable()
         {
-            base.OnDisable();
+            base.OnDisable();  
         }
 
 
@@ -60,11 +60,11 @@ namespace OutwardItemOverrider
                 fileNames[i] = fileName;
                 Debug.Log("Attempting to Load JSON for " + fileName);
                 Debug.Log("Attempting to Load JSON for " + fileInfo[i].Name);
-                LoadOverrides(fileInfo[i].FullName);
+                LoadItemOverrides(fileInfo[i].FullName);
             }
         }
 
-        public void LoadOverrides(string fileLocation)
+        public void LoadItemOverrides(string fileLocation)
         {
             //Debug.Log(":: Loading Config ::");
             string json = File.ReadAllText(fileLocation);
@@ -77,8 +77,8 @@ namespace OutwardItemOverrider
             for (int i = 0; i < test["overrides"].Count; i++)
             {
                 var statOverride = test["overrides"][i];
-
-                // Debug.Log(_overrideType);
+                
+               // Debug.Log(_overrideType);
 
                 switch (_overrideType)
                 {
@@ -95,7 +95,7 @@ namespace OutwardItemOverrider
 
                         if (statOverride["weapon_damage_type"])
                         {
-                            overid.weaponDamageType = (DamageType.Types)Enum.Parse(typeof(DamageType.Types), statOverride["weapon_damage_type"], true);
+                            overid.weaponDamageType = (WeaponDamageType)Enum.Parse(typeof(WeaponDamageType), statOverride["weapon_damage_type"], true);
                         }
 
                         variablesToOverride.Add(overid);
@@ -107,8 +107,8 @@ namespace OutwardItemOverrider
                     case ItemOverrideType.BAG:
                         break;
                 }
-
-            };
+                
+            };          
         }
 
     }
@@ -126,7 +126,7 @@ namespace OutwardItemOverrider
     public class WeaponOverride : ItemOverride
     {
         public WeaponStatType weaponStatType;
-        public DamageType.Types weaponDamageType;
+        public WeaponDamageType weaponDamageType;
     }
 
     public enum ItemOverrideType
@@ -145,18 +145,7 @@ namespace OutwardItemOverrider
         IMPACT,
         STAMINA_COST,
         REACH,
-        SPEED,
-        HEALTH_BONUS,
-        POUCH_BONUS,
-        HEAT_PROTECTION,
-        COLD_PROTECTION,
-        IMPACT_PROTECTION,
-        CORRUPTION_PROTECTION,
-        WATER_PROOF,
-        MOVEMENT_PENALTY,
-        STAMINA_USE_PENALTY,
-        HEAT_REGEN_PENALTY,
-        MANA_USE_MODIFIER
+        SPEED
     }
 
     public enum WeaponDamageType
