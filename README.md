@@ -2,7 +2,7 @@
 
 An attempt at providing a simple method of Modifying Item Stats (Weapons, Armour, Bags) in Outward via JSON files.
 
-It is in the early stages, so currently it only supports Weapon stats but with plans to support most Item types.
+It is in the early stages, so currently it only supports Weapon stats but there are plans to support most Items.
 
 
 
