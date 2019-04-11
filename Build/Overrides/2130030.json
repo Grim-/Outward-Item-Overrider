@@ -1,7 +1,8 @@
 {
     "itemID" : 2010020,
     "type" : "weapon",
-    "overrides" : [
-        {"weapon_stat_type" : "Damage", "weapon_damage_type" : "fire", "value" : 3000}
+    "overrides" : [  
+        {"weapon_stat_type" : "health_bonus", "value" : 90},
+        {"weapon_stat_type" : "pouch_bonus", "value" : 900}
     ]
 }

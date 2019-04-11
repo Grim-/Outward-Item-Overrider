@@ -122,22 +122,65 @@ namespace OutwardItemOverrider
 
                     break;
                 case WeaponStatType.HEAT_PROTECTION:
+
+                    Debug.Log("Updating Weapon Heat Protection Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var heatProtection = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_heatProtection");
+                    Debug.Log("Heat Protection " + heatProtection);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_heatProtection");
+
                     break;
                 case WeaponStatType.COLD_PROTECTION:
+
+                    Debug.Log("Updating Weapon Cold Protection Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var coldBonus = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_coldProtection");
+                    Debug.Log("Cold Protection Bonus " + coldBonus);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_coldProtection");
+
                     break;
                 case WeaponStatType.IMPACT_PROTECTION:
+
+                    Debug.Log("Updating Weapon Impact Resistance Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var impactRes = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_impactResistance");
+                    Debug.Log("Impact Resistance Bonus " + impactRes);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_impactResistance");
+
                     break;
                 case WeaponStatType.CORRUPTION_PROTECTION:
+                    Debug.Log("Updating Weapon Corruption Protection Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var corruptionProtection = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_corruptionProtection");
+                    Debug.Log("Corruption Protection Bonus " + corruptionProtection);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_corruptionProtection");
+
                     break;
                 case WeaponStatType.WATER_PROOF:
+                    Debug.Log("Updating Weapon Water Proofness(?) Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var waterproofBonus = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_waterproof");
+                    Debug.Log("Water Proofness(?) Bonus " + waterproofBonus);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_waterproof");
                     break;
                 case WeaponStatType.MOVEMENT_PENALTY:
+                    Debug.Log("Updating Weapon Movement Penalty Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var movementPenalty = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_movementPenalty");
+                    Debug.Log("Movement Penalty Bonus " + movementPenalty);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_movementPenalty");
                     break;
                 case WeaponStatType.STAMINA_USE_PENALTY:
+                    Debug.Log("Updating Weapon Stamina Use Penalty Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var staminaPenalty = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_staminaUsePenalty");
+                    Debug.Log("Stamina Use Penalty Bonus " + staminaPenalty);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_staminaUsePenalty");
                     break;
                 case WeaponStatType.HEAT_REGEN_PENALTY:
+                    Debug.Log("Updating Weapon Heat Regen Penalty Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var heatRegenPenalty = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_heatRegenPenalty");
+                    Debug.Log("Heat Regen Penalty Bonus " + heatRegenPenalty);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_heatRegenPenalty");
                     break;
                 case WeaponStatType.MANA_USE_MODIFIER:
+                    Debug.Log("Updating Weapon Mana Reduction Bonus Stat for Item ID : " + itemOverride.itemID + " to " + itemOverride.value);
+                    var manaReductionModified = ReflectionGetValue(typeof(EquipmentStats), weaponStatComponent, "m_manaUseModifier");
+                    Debug.Log("Mana Reduction Bonus " + manaReductionModified);
+                    ReflectionSetValue(itemOverride.value, typeof(EquipmentStats), weaponStatComponent, "m_manaUseModifier");
                     break;
                 default:
                     break;
