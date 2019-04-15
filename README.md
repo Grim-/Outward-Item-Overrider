@@ -158,6 +158,8 @@ OLogger.Warning(object _obj, string _panel = "Default"); //this will output yell
 OLogger.Error(object _obj, string _panel = "Default"); //this will output red text to the "_panel" panel
 //Example Turn Unity Debug Into OLogger Debug:
 
+These changes goes into your class file that extends from PartialityMod, and thus in these functions
+
 public override void OnEnable()
 {
     ...
