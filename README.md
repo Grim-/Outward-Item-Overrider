@@ -5,20 +5,17 @@ The project now also uses the OLogger class to debug information in-game
 
 ## User Installation
 Download the API from the Nexus or Github Releases, unzip the file and place the .dll file into "Outward\Mods\". Mods will now be able to use functions provided.
-Set the attribute DebugMode to true or false in your xml to enable debugging. You can find the attribute on the element <OutwardItemOverrides>
+Set the attribute DebugMode to true or false in your xml to enable debugging. You can find the attribute on the root element <OutwardItemOverrides>
 
 ## Massive thanks and pretty much all credit goes to Grim- (Emo#7953) for making the initial mod.
-## Developer Installation
-Download the API from the Nexus or Github Releases, unzip the file and place it somewhere. Then add a Reference to it in Visual Studio. 
-Add `using OModAPI` to the files you want to use the API in.
 
 # Outward Item Overrider 
-> Simply Include the ItemOverride.dll as you would any other Partiality mod then create a .xml formatted as below in Outward/Mods/Overrides (Create the folder if it does not exist).
-`XMLDefaultConfig` is optional, if it and `ConfigModes.CreateIfMissing` is set then the API will automatically create the config file in "Outward\Config\<Filename>" and populate it with whatever string you provide.
+> Simply Include the ItemOverride.dll as you would any other Partiality mod then put xml files formatted as below in Outward/Config (Create the folder if it does not exist).
+The XMLConfigHelper API will automatically load all config files in "Outward\Config\".
 
 # Outward Item Overrider XML structure
-> For example the below file makes three modifications two changes on one item and 1 on another. The first item has an added 200 fire damage and another item has its impact set to 505.
-> You can copy this into a new file and change the ID and values to get started, simply make sure the .JSON file is in the correct folder (above)
+> For example the below file makes two modifications two changes, one item and one on another. The first has an added 200 fire damage and the other has its impact set to 505.
+> You can copy this into a new file and change the ID and values to get started, simply make sure the .XML file is in the correct folder (above)
 
 ```javascript
 //2000090.xml (example)
@@ -54,9 +51,6 @@ Add `using OModAPI` to the files you want to use the API in.
 containing XmlAttribute "ItemStatType" and XmlElement "Value"
 #### Serialized class WeaponOverrideData extending ItemOverrideData 
 
-All item overrides must be correctly formatted .xml and be placed in a folder named "Config" within the Outward folder `(Outward/Config)`.
-Once the game has loaded the .dll will check for the xml file in the Config folder and apply them to the item.
-
 ## Currently Supported Types
 #### Weapon - Half way
 #### Armour - TODO
@@ -66,6 +60,9 @@ Once the game has loaded the .dll will check for the xml file in the Config fold
 ## Currently Supported Weapon Stats
 If you are editing a Weapon's Damage Stats you must include the <WeaponOverrideData DmgType="type" (Get supported Damage Types below)
 
+## Currently Supported Item Stats
+Not really support for it yet but you must include the <ItemOverrideData ItemStatType="type" 
+
 #### DAMAGE Types  
     * Physical
     * Ethereal,
@@ -73,19 +70,19 @@ If you are editing a Weapon's Damage Stats you must include the <WeaponOverrideD
     * Electric,
     * Frost,
     * Fire
-	* DarkOLD
-	* LightOLD
-	* Raw
+    * DarkOLD
+    * LightOLD
+    * Raw
 
 
 #### Weapon Stats
-	* NONE
-	* DAMAGE
-	* IMPACT,
-	* STAMINA_COST,
-	* REACH,
-	* SPEED,
-	* HEALTH_BONUS,
+    * NONE
+    * DAMAGE
+    * IMPACT,
+    * STAMINA_COST,
+    * REACH,
+    * SPEED,
+    * HEALTH_BONUS,
     * POUCH_BONUS,
     * HEAT_PROTECTION,
     * COLD_PROTECTION,
