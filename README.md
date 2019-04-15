@@ -4,6 +4,8 @@ Added a base class called ItemOverrideData that can be a base for any type of ov
 Uses XML serialization and deserialization for its configuration file as to easily translate the configuration into C# classes and objects.
 The project now also uses the OLogger class to debug information in-game
 
+## Massive thanks and pretty much all credit goes to Grim- (Emo#7953) for making the initial mod.
+
 # Outward Item Overrider 
 
 An attempt at providing a simple method of Modifying Item Stats (Weapons, Armour, Bags) in Outward via XML configuration files.
