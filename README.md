@@ -100,15 +100,11 @@ public void Initialize()
 {
 	// Read config file
 	ConfigHelper configHelper = new ConfigHelper(ConfigHelper.ConfigModes.CreateIfMissing, "FileNameHere.xml");
-	configHelper.XMLDefaultConfig = "<config><baseSneakSpeed>0.7</baseSneakSpeed><stealthTrainingBonus>1.3</stealthTrainingBonus></config>";
-An attempt at providing a simple method of Modifying Item Stats (Weapons, Armour, Bags) in Outward via XML configuration files.
-It is in the early stages, so currently it only supports Weapon stats but there are plans to support most Items.
+	configHelper.XMLDefaultConfig = "<config><baseSneakSpeed>0.7</baseSneakSpeed><stealthTrainingBonus>1.3</stealthTrainingBonus </config>";
 	Debug.Log("Trying to load " + configHelper.FullPath);
 	float baseSneakSpeed = configHelper.ReadFloat("/config/baseSneakSpeed");
 	float stealthTrainingBonus = configHelper.ReadFloat("/config/stealthTrainingBonus");
-	
 	configHelper.WriteValue("/config/test", "write value 1");
-#### Getting Started
 	for(int i = 0; i < 10; ++i)
 		configHelper.WriteValue("/config/loopValues/val_" + i, i.ToString());
 }
@@ -161,15 +157,34 @@ OLogger.DestroyUIPanel(string _panel); //this will destroy the "_panel" panel;
 OLogger.Warning(object _obj, string _panel = "Default"); //this will output yellow text to the "_panel" panel
 OLogger.Error(object _obj, string _panel = "Default"); //this will output red text to the "_panel" panel
 //Example Turn Unity Debug Into OLogger Debug:
-public void Update()
+
+public override void OnEnable()
 {
+    ...
+    ...
+    ...
+    GameObject obj = new GameObject();
+    NameOfYourScriptClass = obj.AddComponent<NameOfYourScriptClass>();
+
+    //Used to set the parent of all debug boxes to obj
+    OLogger.SetupObject(obj);
+}
+
+
+public override void OnLoad()
+{
+	base.OnLoad();
 	
-	//First setup "Default Unity Compiler" panel at location: (X:400,Y:400)
+	// Sets up "Default Unity Compiler" panel at location: (X:400,Y:400)
 	//	size: (W:400,H:400) and have it log to file (mods/Debug/"PanelName".txt) and be enabled on start
 	OLogger.CreateLog(new Rect(400, 400, 400, 400), "Default Unity Compiler", true, true);
 	
 	//If you want to also debug Unity's stack trace then call this
 	OLogger.CreateLog(new Rect(400, 400, 400, 400), "Default Unity Stack Trace", true, true);
+	
+	// Create the default logging panel that your addon will print to
+	OLogger.CreateLog(new Rect(400, 400, 400, 400), "Default", true, true);
+	
 	//Add ignores to OLogger ignore list (will filter out from Unity's Debug calls)
 	OLogger.ignoreList.AddToIgnore("Internal", "Failed to create agent"
 								  , "is registered with more than one LODGroup"
