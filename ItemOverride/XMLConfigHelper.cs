@@ -3,9 +3,9 @@ using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 using ODebug;
 using ConfigData;
-using System.Collections.Generic;
 
 namespace ConfigHelpers
 {
@@ -19,33 +19,40 @@ namespace ConfigHelpers
         private XmlDocument configDoc;
         private string xmlConfigDefault;
         private string configDirectory = "\\Config";
+        private bool m_hasConfigsBeenLoaded = false;
+        private List<OutwardItemOverrides> m_OutwardItemOverrides;
         private FileSystemWatcher directoryWatcher = new FileSystemWatcher();
         private FileSystemWatcher fileWatcher = new FileSystemWatcher();
-
         private XmlSerializerNamespaces xns = new XmlSerializerNamespaces();
 
         #region Constructors
-        public XMLConfigHelper() { }
+        public XMLConfigHelper() {
+            this.m_OutwardItemOverrides = new List<OutwardItemOverrides>();
+        }
 
         public XMLConfigHelper(ConfigModes mode)
         {
             this.mode = mode;
+            this.m_OutwardItemOverrides = new List<OutwardItemOverrides>();
         }
 
         public XMLConfigHelper(ConfigModes mode, string configName)
         {
             this.mode = mode;
             this.configName = configName;
+            this.m_OutwardItemOverrides = new List<OutwardItemOverrides>();
         }
         public XMLConfigHelper(string configName)
         {
             this.configName = configName;
+            this.m_OutwardItemOverrides = new List<OutwardItemOverrides>();
         }
 
         public XMLConfigHelper(string configName, string basePath)
         {
             this.configName = configName;
             this.basePath = basePath;
+            this.m_OutwardItemOverrides = new List<OutwardItemOverrides>();
         }
 
         public XMLConfigHelper(ConfigModes mode, string configName, string basePath)
@@ -53,51 +60,58 @@ namespace ConfigHelpers
             this.mode = mode;
             this.basePath = basePath;
             this.configName = configName;
+            this.m_OutwardItemOverrides = new List<OutwardItemOverrides>();
         }
 
         #endregion
 
         public void Init()
         {
-            // Create the config directory if it doesn't exist
-            if (!Directory.Exists(basePath))
-            {
-                // File system operations are slow, so we can't guarantee that the directory will be created 
-                // before we try to create the file
-
-                directoryWatcher.Path = Directory.GetCurrentDirectory();
-                directoryWatcher.Created += WatcherCreated;
-                directoryWatcher.EnableRaisingEvents = true;
-
-                Directory.CreateDirectory(basePath);
-                return;
-            }
-
-            configDoc = new XmlDocument();
-
-            // Handle if the config file we're looking for doesn't actually exist
-            if (!File.Exists(FullPath))
-            {
-                // Check if we allow creation
-                if (mode == ConfigModes.CreateIfMissing)
+            try {
+                // Create the config directory if it doesn't exist
+                if (!Directory.Exists(basePath))
                 {
-                    fileWatcher.Path = basePath;
-                    fileWatcher.Created += WatcherCreated;
-                    fileWatcher.EnableRaisingEvents = true;
-                    CreateDefaultOverrides();
+                    // File system operations are slow, so we can't guarantee that the directory will be created 
+                    // before we try to create the file
+
+                    directoryWatcher.Path = Directory.GetCurrentDirectory();
+                    directoryWatcher.Created += WatcherCreated;
+                    directoryWatcher.EnableRaisingEvents = true;
+
+                    Directory.CreateDirectory(basePath);
                     return;
                 }
                 else
-                    throw new IOException(string.Format("Config file {0} doesn't exist, and ConfigMode doesn't permit creation.", FullPath));
+                {
+                    directoryWatcher.Created -= WatcherCreated;
+                }
+
+                configDoc = new XmlDocument();
+
+                //configDoc.Load(FullPath);
+                // parse all the xml and return them
+
+                var directoryInfo = new DirectoryInfo(basePath);
+                var fileInfo = directoryInfo.GetFiles();
+                foreach (FileInfo fInfo in fileInfo)
+                {
+                    var filename = Path.GetFileName(fInfo.FullName);
+                    var fullPath = Path.Combine(basePath, filename);
+                    m_OutwardItemOverrides.Add(ParseXml<OutwardItemOverrides>(fullPath));
+                }
+
+                if (m_OutwardItemOverrides.Count > 0)
+                {
+                    m_hasConfigsBeenLoaded = true;
+                } else
+                {
+                    m_hasConfigsBeenLoaded = false;
+                }
             }
-            try
+            catch(DirectoryNotFoundException e)
             {
-                configDoc.Load(FullPath);
-            }
-            catch(FileNotFoundException e)
-            {
-                OLogger.Log("FileNotFoundException");
-                throw new FileNotFoundException("Can't find config file: " + FullPath);
+                OLogger.Log("FileNotFoundException: " + e.ToString());
+                throw new FileNotFoundException("Can't find config folder: " + basePath);
                 
             }
             catch(XmlException e)
@@ -107,11 +121,22 @@ namespace ConfigHelpers
             }
         }
 
+        public List<OutwardItemOverrides> GetConfigData()
+        {
+            if (m_hasConfigsBeenLoaded)
+            {
+                return m_OutwardItemOverrides;
+            } else
+            {
+                return null;
+            }
+        }
+
         private void WatcherCreated(object sender, FileSystemEventArgs e)
         {
             // Wait for the directory we want to create to actually be created
-            if ((configDirectory.Contains(e.Name) || e.Name.Contains(configDirectory) || e.Name.Equals(configDirectory)) ||
-                configName.Contains(e.Name) || e.Name.Contains(configName) || e.Name.Equals(configName))
+            if ((configDirectory.Contains(e.Name) || e.Name.Contains(configDirectory) || e.Name.Equals(configDirectory)))
+                //configName.Contains(e.Name) || e.Name.Contains(configName) || e.Name.Equals(configName))
                 // When that happens, re-call Init, since it will skip the creating this time
                 Init();
         }
@@ -197,7 +222,7 @@ namespace ConfigHelpers
             try
             {
                 // This is okay to do because we never get here unless the config file doesn't exist
-                File.WriteAllText(FullPath, xmlConfigDefault);
+                File.WriteAllText(Path.Combine(basePath, "default.xml"), xmlConfigDefault);
             }
             catch(Exception e)
             {
@@ -217,6 +242,7 @@ namespace ConfigHelpers
         {
             get { return Path.Combine(basePath, configName); }
         }
+
         public ConfigModes Mode
         {
             get { return mode; }
@@ -235,7 +261,7 @@ namespace ConfigHelpers
             CreateIfMissing
         }
 
-        public T ParseXml<T>() where T : class
+        public T ParseXml<T>(string fullPath) where T : class
         {
             // Creates an instance of the XmlSerializer class;
             // specifies the type of object to be deserialized.
@@ -249,7 +275,7 @@ namespace ConfigHelpers
             XmlAttributeEventHandler(serializer_UnknownAttribute);
 
             // A FileStream is needed to read the XML document.
-            FileStream fs = new FileStream(FullPath, FileMode.Open);
+            FileStream fs = new FileStream(fullPath, FileMode.Open);
             // Declares an object variable of the type to be deserialized.
 
             T po;
@@ -267,7 +293,7 @@ namespace ConfigHelpers
                 // specifies the type of object to serialize.
                 XmlSerializer serializer =
                 new XmlSerializer(typeof(OutwardItemOverrides));
-                TextWriter writer = new StreamWriter(FullPath);
+                TextWriter writer = new StreamWriter(Path.Combine(basePath, "Default.xml"));
                 OutwardItemOverrides po = new OutwardItemOverrides();
 
 
@@ -294,8 +320,9 @@ namespace ConfigHelpers
                 i1.Data.Add(o2);
 
                 // Inserts the item into the array.
-                ItemOverride[] items = { i1 };
-                po.ItemOverrides = new List<ItemOverride>(items);
+                //ItemOverride item = { i1 };
+                //ItemOverride[] items = { i1 };
+                po.ItemOverrides = i1;
 
                 // Set DebugMode to default OFF
                 po.DebugMode = false;

@@ -1,102 +1,106 @@
-# Changes from Outward Item Overrider by Grim-
+# Outward-Mods-API
 
-Added a base class called ItemOverrideData that can be a base for any type of override data for other types such as the implemented WeaponOverrideData, future implementations of Armor, Bags etc
-Uses XML serialization and deserialization for its configuration file as to easily translate the configuration into C# classes and objects.
-The project now also uses the OLogger class to debug information in-game
+## User Installation
+Download the API from the Nexus or Github Releases, unzip the file and place the .dll file into "Outward\Mods\". Mods will now be able to use functions provided.
 
-## Massive thanks and pretty much all credit goes to Grim- (Emo#7953) for making the initial mod.
+## Developer Installation
+Download the API from the Nexus or Github Releases, unzip the file and place it somewhere. Then add a Reference to it in Visual Studio. 
+Add `using OModAPI` to the files you want to use the API in.
 
-# Outward Item Overrider 
+## ConfigHelper Example
+```csharp
+public void Initialize()
+{
+	// Read config file
+	ConfigHelper configHelper = new ConfigHelper(ConfigHelper.ConfigModes.CreateIfMissing, "FileNameHere.xml");
+	configHelper.XMLDefaultConfig = "<config><baseSneakSpeed>0.7</baseSneakSpeed><stealthTrainingBonus>1.3</stealthTrainingBonus></config>";
 
-An attempt at providing a simple method of Modifying Item Stats (Weapons, Armour, Bags) in Outward via XML configuration files.
-It is in the early stages, so currently it only supports Weapon stats but there are plans to support most Items.
+	Debug.Log("Trying to load " + configHelper.FullPath);
 
+	float baseSneakSpeed = configHelper.ReadFloat("/config/baseSneakSpeed");
+	float stealthTrainingBonus = configHelper.ReadFloat("/config/stealthTrainingBonus");
+	
+	configHelper.WriteValue("/config/test", "write value 1");
 
-#### Getting Started
-
-> Simply Include the ItemOverride.dll as you would any other Partiality mod then create a .xml formatted as below in Outward/Mods/Overrides (Create the folder if it does not exist).
-
-> For example the below file makes three modifications two changes on one item and 1 on another. The first item has an added 200 fire damage and its pouch bonus set to 50, the second weapon has its weapons stats changed to do 10 impact.
-
-> You can copy this into a new file and change the ID and values to get started, simply make sure the .JSON file is in the correct folder (above)
-
-```javascript
-//ItemOverrides.xml (example)
-<?xml version="1.0" encoding="utf-8"?>
-<OutwardItemOverrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" DebugMode="true">
-  <ItemOverrides>
-    <ItemOverride ItemID="2000090" ItemType="WEAPON">
-      <Data>
-        <WeaponOverrideData WeaponStatType="DAMAGE" DmgType="Fire">
-          <Value>200</Value>
-        </WeaponOverrideData>
-		<WeaponOverrideData WeaponStatType="POUCH_BONUS">
-          <Value>50</Value>
-        </WeaponOverrideData>
-      </Data>
-    </ItemOverride>
-	<ItemOverride ItemID="5110110" ItemType="WEAPON">
-      <Data>
-        <WeaponOverrideData WeaponStatType="IMPACT">
-          <Value>10</Value>
-        </WeaponOverrideData>
-      </Data>
-    </ItemOverride>
-  </ItemOverrides>
-</OutwardItemOverrides>
-
+	for(int i = 0; i < 10; ++i)
+		configHelper.WriteValue("/config/loopValues/val_" + i, i.ToString());
+}
 ```
-## Currently Supported XML Options
-#### Serialized class ItemOverrideData 
-containing XmlAttribute "ItemStatType" and XmlElement "Value"
-#### Serialized class WeaponOverrideData extending ItemOverrideData 
-containing XmlAttribute WeaponStatType of type WeaponStatType and XmlAttribute DmgType of type DamageType.Types listed under "DAMAGE Types"
 
-All item overrides must be correctly formatted .xml and be placed in a folder named "Config" within the Outward folder `(Outward/Config)`.
+`XMLDefaultConfig` is optional, if it and `ConfigModes.CreateIfMissing` is set then the API will automatically create the config file in "Outward\Config\<Filename>" and populate it with whatever string you provide.
 
-Once the game has loaded the .dll will check for the xml file in the Config folder and apply them to the item.
+## ReflectionTools Example
+```csharp
+// These can be run once, for example in Initialize(), since their values don't change
+// Variable
+FieldInfo m_autoRun = ReflectionTools.GetField(typeof(LocalCharacterControl), "m_autoRun");
+// Method
+MethodInfo StopAutoRun = ReflectionTools.GetMethod(typeof(LocalCharacterControl), "StopAutoRun");
 
-## Currently Supported Types
-#### Weapon - Half way
-#### Armour - TODO
-#### Bag - TODO
-#### Skills -TODO
+// Using the reflected values has to be done in a method where an instance to the class exists (in this example, self)
+public void detectMovementInputs(On.LocalCharacterControl.orig_DetectMovementInputs orig, LocalCharacterControl self)
+{
+	// Reading variable
+	if ((bool)m_autoRun.GetValue(self))
+	
+	// Setting variable
+	m_autoRun.SetValue(self, false);
+	
+	// Calling a method with no parameters
+	StopAutoRun.Invoke(self, null);
+	
+	// Calling a method with parameters
+	StopAutoRun.Invoke(self, new object[] { param1, param2 ...});
+}
+```
 
+## OLogger Example
+```csharp
 
-## Currently Supported Weapon Stats
+//All of these functions are called from the static class OLogger
 
-If you are editing a Weapon's Damage Stats you must include the <WeaponOverrideData DmgType="type" (Get supported Damage Types below)
+//Here is the main Log function:
+OLogger.Log(object _obj, string _color = "ffffffff", string _panel = "Default")
 
-#### DAMAGE Types  
-    * Physical
-    * Ethereal,
-    * Decay,
-    * Electric,
-    * Frost,
-    * Fire
-	* DarkOLD
-	* LightOLD
-	* Raw
+//_obj is the object you want to display, it will be turned into a string in the log function.
+//_color is the color that the text will be, which by default will be white.
+//_panel is the panel that the text will be output to.
 
+//Other functions:
+//This isn't actually needed as .Log will create a panel, however, this give you control over the writeToDisk/enabledOnCreation
+OLogger.CreateLog(Rect _rect, string _panel = "Default", bool _writeToDisk = true, bool _enabledOnCreation = true);
 
-#### Weapon Stats
-	* NONE
-	* DAMAGE
-	* IMPACT,
-	* STAMINA_COST,
-	* REACH,
-	* SPEED,
-	* HEALTH_BONUS,
-    * POUCH_BONUS,
-    * HEAT_PROTECTION,
-    * COLD_PROTECTION,
-    * IMPACT_PROTECTION,
-    * CORRUPTION_PROTECTION,
-    * WATER_PROOF,
-    * MOVEMENT_PENALTY,
-    * STAMINA_USE_PENALTY,
-    * HEAT_REGEN_PENALTY,
-    * MANA_USE_MODIFIER
+//_writeToDisk is whether you want to output any text in this panel to a file in "mods/Debug/'PanelName'.txt"
+//treat writing to disk in an update loop the same as calling Debug.Log.
 
+OLogger.SetUIPanelEnabled(string _panel, bool _enabled); //this will set the panel "_panel" to "enabled"
+OLogger.SetPanelWriteToDisk(string _panel, bool _writeToDisk) //this will set writeToDisk to "_writeToDisk"
 
+OLogger.ClearUIPanel(string _panel); //this will clear the text in the "_panel" panel
+OLogger.DestroyUIPanel(string _panel); //this will destroy the "_panel" panel;
 
+OLogger.Warning(object _obj, string _panel = "Default"); //this will output yellow text to the "_panel" panel
+OLogger.Error(object _obj, string _panel = "Default"); //this will output red text to the "_panel" panel
+
+//Example Turn Unity Debug Into OLogger Debug:
+public void Update()
+{
+	
+	//First setup "Default Unity Compiler" panel at location: (X:400,Y:400)
+	//	size: (W:400,H:400) and have it log to file (mods/Debug/"PanelName".txt) and be enabled on start
+	OLogger.CreateLog(new Rect(400, 400, 400, 400), "Default Unity Compiler", true, true);
+	
+	//If you want to also debug Unity's stack trace then call this
+	OLogger.CreateLog(new Rect(400, 400, 400, 400), "Default Unity Stack Trace", true, true);
+
+	//Add ignores to OLogger ignore list (will filter out from Unity's Debug calls)
+	OLogger.ignoreList.AddToIgnore("Internal", "Failed to create agent"
+								  , "is registered with more than one LODGroup"
+								  , "No AudioManager"); 
+	//ignores can also be removed by calling OLogger.ignoreList.RemoveFromIgnore()
+
+	//Finally hook OLogger onto logMessageReceived to receive Unity's Debug calls
+	Application.logMessageReceived += OLogger.DebugMethodHook;
+
+}
+```

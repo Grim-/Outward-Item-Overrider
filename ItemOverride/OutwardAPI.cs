@@ -4,6 +4,7 @@ using ODebug;
 using ConfigHelpers;
 using ConfigData;
 using System;
+using System.Collections.Generic;
 
 namespace ItemOverrideMod
 {
@@ -23,6 +24,7 @@ namespace ItemOverrideMod
         {
             base.OnEnable();
             APILoad.api = this;
+
             GameObject obj = new GameObject();
             APILoader = obj.AddComponent<APILoad>();
 
@@ -30,22 +32,27 @@ namespace ItemOverrideMod
             OLogger.SetupObject(obj);
 
             // Load our configuration file
-            XMLConfigHelper xmlConfigHelper = new XMLConfigHelper(XMLConfigHelper.ConfigModes.CreateIfMissing, "ItemOverrides.xml");
-            xmlConfigHelper.Init();
-
-            // Deserialize our XML to C# classes and objects directly, the parameter is the XMLRootAttribute, aka Document Root.
-            OutwardItemOverrides outwardItemOverrides;
+            XMLConfigHelper xmlConfigHelper = new XMLConfigHelper();
+            OLogger.Log("xmlConfig ctor called");
+            List<OutwardItemOverrides> outwardItemOverrides = new List<OutwardItemOverrides>();
             try
             {
-                outwardItemOverrides = xmlConfigHelper.ParseXml<OutwardItemOverrides>();
-                OLogger.SetDebug(outwardItemOverrides.DebugMode);
-                OLogger.SetUIPanelEnabled("Default", outwardItemOverrides.DebugMode);
+                xmlConfigHelper.Init();
+                OLogger.Log("xmlConfig Init called");
+                // Deserialize our XML to C# classes and objects directly, the parameter is the XMLRootAttribute, aka Document Root.
+                outwardItemOverrides = xmlConfigHelper.GetConfigData();
+
+                OLogger.SetDebug(outwardItemOverrides.FirstOrDefault().DebugMode);
+                OLogger.SetUIPanelEnabled("Default", outwardItemOverrides.FirstOrDefault().DebugMode);
                 // Reads the order date.
                 OLogger.Log("Sucessfully read the configuration file contents.");
 
             } catch (Exception e)
             {
                 // Prob a bad idea, but kept for now
+                OLogger.Log("Exception called :( ");
+                OLogger.Log(e.Message);
+                OLogger.Log(e.ToString());
                 throw e;
             }
 
@@ -56,6 +63,7 @@ namespace ItemOverrideMod
         {
             base.OnLoad();
             //NOTE: The in-game logger window will not be created and displayed unless we instantiate it in here...
+            //OLogger.SetDebug(true);
             OLogger.CreateLog(new Rect(400, 400, 400, 400), "Default", true, true);            
         }
     }

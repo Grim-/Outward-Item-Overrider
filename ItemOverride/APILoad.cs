@@ -8,13 +8,14 @@ namespace ItemOverrideMod
     public class APILoad : MonoBehaviour
     {
         public static ItemOverrider api;
-        private List<ItemOverride> m_itemsToOverride;
+        private List<ItemOverride> m_itemsToOverride = new List<ItemOverride>();
         private Dictionary<ItemOverride, Item> m_items = new Dictionary<ItemOverride, Item>();
 
-        public void Initialise(OutwardItemOverrides configurationData)
+        public void Initialise(List<OutwardItemOverrides> configurationData)
         {
-            m_itemsToOverride = configurationData.ItemOverrides;
-       
+            //Get all the data from each XML file
+            configurationData.ForEach(x => m_itemsToOverride.Add(x.ItemOverrides));
+                
             foreach (var item in m_itemsToOverride)
             {
                 OLogger.Log("------------------------------------");

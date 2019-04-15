@@ -10,8 +10,10 @@ namespace ConfigData
     IsNullable = false)]
     public class OutwardItemOverrides
     {
-        [XmlArray("ItemOverrides"), XmlArrayItem(typeof(ItemOverride))]
-        public List<ItemOverride> ItemOverrides { get; set; }
+        [XmlElement("ItemOverride")]
+        public ItemOverride ItemOverrides { get; set; }
+        //[XmlArray("ItemOverrides"), XmlArrayItem(typeof(ItemOverride))]
+        //public List<ItemOverride> ItemOverrides { get; set; }
         [XmlAttribute]
         public bool DebugMode { get; set; }
 
