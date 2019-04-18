@@ -21,7 +21,12 @@ The XMLConfigHelper API will automatically load all config files in "Outward\Con
 #### Skills -TODO
 
 # Outward Item Overrider XML structure
-> For example the below file makes two modifications two changes, one item and one on another. The first has an added 200 fire damage and the other has its impact set to 505.
+> For example the below files makes three modifications to one item and two on the other item. 
+
+The first has an added 200 fire damage and has its impact set to 51 and has its max durability set to 211.
+
+The second item has its impact set to 500 and its pouch bonus to 51
+.
 > You can copy this into a new file and change the ID and values to get started, simply make sure the .XML file is in the correct folder (above)
 
 ```javascript
@@ -31,7 +36,7 @@ The XMLConfigHelper API will automatically load all config files in "Outward\Con
   <ItemOverrides ItemID="2000090">
     <Data>
       <WeaponOverrideData OverrideType="WEAPON" Value="200" WeaponStatType="DAMAGE" DmgType="Fire" />
-	  <WeaponOverrideData OverrideType="WEAPON" Value="51" WeaponStatType="IMPACT" />
+      <WeaponOverrideData OverrideType="WEAPON" Value="51" WeaponStatType="IMPACT" />
       <ItemOverrideData OverrideType="ITEMSTAT" Value="211" ItemStatType="MAXDURABILITY" />
     </Data>
   </ItemOverrides>
