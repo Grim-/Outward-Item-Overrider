@@ -1,6 +1,6 @@
 # Changes from Outward Item Overrider by Grim-
-Added a base class called ItemOverrideData that can be a base for any type of override data for other types such as the implemented WeaponOverrideData, future implementations of Armor, Bags etc
-Uses XML serialization and deserialization for its configuration file as to easily translate the configuration into C# classes and objects.
+Added a base class called OverrideData that can be a base for any type of override data for other types such as the implemented WeaponOverrideData and ItemOverrideData, future implementations of Armor, Bags etc are on the way.
+The project uses XML serialization and deserialization for its configuration file as to easily translate the configuration into C# classes and objects.
 The project now also uses the OLogger class to debug information in-game
 
 ## User Installation
@@ -13,6 +13,13 @@ Set the attribute DebugMode to true or false in your xml to enable debugging. Yo
 > Simply Include the ItemOverride.dll as you would any other Partiality mod then put xml files formatted as below in Outward/Config (Create the folder if it does not exist).
 The XMLConfigHelper API will automatically load all config files in "Outward\Config\".
 
+## Currently Supported Types
+#### Weapon - Half way
+#### Item - Half way
+#### Armour - TODO
+#### Bag - TODO
+#### Skills -TODO
+
 # Outward Item Overrider XML structure
 > For example the below file makes two modifications two changes, one item and one on another. The first has an added 200 fire damage and the other has its impact set to 505.
 > You can copy this into a new file and change the ID and values to get started, simply make sure the .XML file is in the correct folder (above)
@@ -21,13 +28,13 @@ The XMLConfigHelper API will automatically load all config files in "Outward\Con
 //2000090.xml (example)
 <?xml version="1.0" encoding="utf-8"?>
 <OutwardItemOverrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" DebugMode="true">
-  <ItemOverride ItemID="2000090" ItemType="WEAPON">
+  <ItemOverrides ItemID="2000090">
     <Data>
-	  <WeaponOverrideData ItemStatType="NONE" WeaponStatType="DAMAGE" DmgType="Fire">
-	    <Value>200</Value>
-	  </WeaponOverrideData>
+      <WeaponOverrideData OverrideType="WEAPON" Value="200" WeaponStatType="DAMAGE" DmgType="Fire" />
+	  <WeaponOverrideData OverrideType="WEAPON" Value="51" WeaponStatType="IMPACT" />
+      <ItemOverrideData OverrideType="ITEMSTAT" Value="211" ItemStatType="MAXDURABILITY" />
     </Data>
-  </ItemOverride>
+  </ItemOverrides>
 </OutwardItemOverrides>
 ```
 
@@ -36,63 +43,74 @@ The XMLConfigHelper API will automatically load all config files in "Outward\Con
 //2100000.xml (example)
 <?xml version="1.0" encoding="utf-8"?>
 <OutwardItemOverrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" DebugMode="true">
-  <ItemOverride ItemID="2100000" ItemType="WEAPON">
+  <ItemOverrides ItemID="2100000">
     <Data>
-	  <WeaponOverrideData WeaponStatType="IMPACT">
-	    <Value>505</Value>
-	  </WeaponOverrideData>
+	  <WeaponOverrideData OverrideType="WEAPON" Value="500" WeaponStatType="IMPACT" />
+	  <WeaponOverrideData OverrideType="WEAPON" Value="51" WeaponStatType="POUCH_BONUS" />
     </Data>
-  </ItemOverride>
+  </ItemOverrides>
 </OutwardItemOverrides>
 ```
 
 ## Currently Supported XML Options
-#### Serialized class ItemOverrideData 
-containing XmlAttribute "ItemStatType" and XmlElement "Value"
-#### Serialized class WeaponOverrideData extending ItemOverrideData 
+### itemID
 
-## Currently Supported Types
-#### Weapon - Half way
-#### Armour - TODO
-#### Bag - TODO
-#### Skills -TODO
+### Class ItemOverrideData
+* OverrideType
+* ItemStatType
+* Value
 
-## Currently Supported Weapon Stats
-If you are editing a Weapon's Damage Stats you must include the <WeaponOverrideData DmgType="type" (Get supported Damage Types below)
+### Class WeaponOverrideData
+* OverrideType
+* WeaponStatType
+* DmgType
+* Value
 
-## Currently Supported Item Stats
-Not really support for it yet but you must include the <ItemOverrideData ItemStatType="type" 
+#### OverrideType
+* NONE
+* ITEMSTAT
+* WEAPON
+* ARMOUR
+* SPELL
+* BAG
 
-#### DAMAGE Types  
-    * Physical
-    * Ethereal,
-    * Decay,
-    * Electric,
-    * Frost,
-    * Fire
-    * DarkOLD
-    * LightOLD
-    * Raw
+#### ItemStatType
+* NONE
+* RAWWEIGHT
+* MAXDURABILITY
 
+#### WeaponStatType
+* NONE
+* DAMAGE
+* IMPACT
+* STAMINA_COST
+* REACH
+* SPEED
+* HEALTH_BONUS
+* POUCH_BONUS
+* HEAT_PROTECTION
+* COLD_PROTECTION
+* IMPACT_PROTECTION
+* CORRUPTION_PROTECTION
+* WATER_PROOF
+* MOVEMENT_PENALTY
+* STAMINA_USE_PENALTY
+* HEAT_REGEN_PENALTY
+* MANA_USE_MODIFIER
 
-#### Weapon Stats
-    * NONE
-    * DAMAGE
-    * IMPACT,
-    * STAMINA_COST,
-    * REACH,
-    * SPEED,
-    * HEALTH_BONUS,
-    * POUCH_BONUS,
-    * HEAT_PROTECTION,
-    * COLD_PROTECTION,
-    * IMPACT_PROTECTION,
-    * CORRUPTION_PROTECTION,
-    * WATER_PROOF,
-    * MOVEMENT_PENALTY,
-    * STAMINA_USE_PENALTY,
-    * HEAT_REGEN_PENALTY,
-    * MANA_USE_MODIFIER
+#### DmgType  
+* Physical
+* Ethereal
+* Decay
+* Electric
+* Frost
+* Fire
+* DarkOLD
+* LightOLD
+* Raw
+
+If you are editing a Weapon's Damage Stats you must include the <WeaponOverrideData DmgType="type here"
+
 
 ## ConfigHelper Example
 ```csharp
