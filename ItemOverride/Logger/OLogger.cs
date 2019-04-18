@@ -12,7 +12,7 @@ namespace ODebug
     public static class OLogger
     {
         // Set DEBUG to false to not print anything
-        private static bool Debug;
+        private static bool Debug = true;
         //store debug box variables
         private static Dictionary<string, DebugBox> m_debugPanels = new Dictionary<string, DebugBox>();
         private static int m_currentGUIID = 0;

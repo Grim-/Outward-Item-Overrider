@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using ODebug;
+using ConfigData;
 
 namespace ItemOverrideMod
 {
@@ -68,6 +70,24 @@ namespace ItemOverrideMod
         {
             Field,
             Method
+        }
+
+        public static PropertyInfo[] GetClassProperties(Type objType)
+        {
+            PropertyInfo[] properties = null;
+            properties = objType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return properties;
+        }
+
+
+        public static void PrintProperties(PropertyInfo[] properties, OverrideData instance)
+        {
+            foreach (var prop in properties)
+            {
+                OLogger.Log("\t" +
+                    prop.Name + "\t" +
+                    prop.GetValue(instance));
+            }
         }
     }
 }

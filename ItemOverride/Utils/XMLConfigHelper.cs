@@ -119,6 +119,14 @@ namespace ConfigHelpers
                 OLogger.Log("XmlException :/");
                 // Do nothing, which is bad practice
             }
+            catch (Exception e)
+            {           
+                // Prob a bad idea, but kept for now
+                OLogger.Log("Exception called :( ");
+                OLogger.Log(e.Message);
+                OLogger.Log(e.ToString());
+                throw e;
+            }
         }
 
         public List<OutwardItemOverrides> GetConfigData()
@@ -277,11 +285,20 @@ namespace ConfigHelpers
             // A FileStream is needed to read the XML document.
             FileStream fs = new FileStream(fullPath, FileMode.Open);
             // Declares an object variable of the type to be deserialized.
-
-            T po;
-            // Uses the Deserialize method to restore the object's state
-            // with data from the XML document. */
-            po = (T)serializer.Deserialize(fs);
+            T po = null;
+            try
+            {
+                
+                // Uses the Deserialize method to restore the object's state
+                // with data from the XML document. */
+                po = (T)serializer.Deserialize(fs);
+            } catch (InvalidOperationException e)
+            {
+                OLogger.Log("Malformed xml elements or attributes or other error.");
+                OLogger.Log(e.ToString());
+                OLogger.Log("Inner Exception: " + e.InnerException.ToString());
+            }
+            fs.Close();
             return po;
         }
 
@@ -299,29 +316,27 @@ namespace ConfigHelpers
 
                 // Creates an ItemOverride.
                 ItemOverride i1 = new ItemOverride();
-                i1.ItemID = 2000090;
-                i1.ItemType = ItemOverrideType.WEAPON;
+                i1.ItemID = 2000090;             
 
                 // Creates an WeaponOverrideData
                 WeaponOverrideData o1 = new WeaponOverrideData();
+                o1.OverrideType = OverrideType.WEAPON;
                 o1.WeaponStatType = WeaponStatType.DAMAGE;
                 o1.DmgType = DamageType.Types.Fire;
-                o1.ItemStatType = ItemStatType.NONE;
                 o1.Value = 200;
 
                 // Creates an ItemOverrideData
                 ItemOverrideData o2 = new ItemOverrideData();
-                o2.ItemStatType = ItemStatType.WEIGHT;
+                o2.OverrideType = OverrideType.ITEMSTAT;
+                o2.ItemStatType = ItemStatType.MAXDURABILITY;
                 o2.Value = 25.0f;
 
                 // Add them to the list of overrides
-                i1.Data = new List<ItemOverrideData>();
+                i1.Data = new List<OverrideData>();
                 i1.Data.Add(o1);
                 i1.Data.Add(o2);
 
                 // Inserts the item into the array.
-                //ItemOverride item = { i1 };
-                //ItemOverride[] items = { i1 };
                 po.ItemOverrides = i1;
 
                 // Set DebugMode to default OFF

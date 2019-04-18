@@ -10,10 +10,7 @@ namespace ConfigData
     IsNullable = false)]
     public class OutwardItemOverrides
     {
-        [XmlElement("ItemOverride")]
         public ItemOverride ItemOverrides { get; set; }
-        //[XmlArray("ItemOverrides"), XmlArrayItem(typeof(ItemOverride))]
-        //public List<ItemOverride> ItemOverrides { get; set; }
         [XmlAttribute]
         public bool DebugMode { get; set; }
 
@@ -24,17 +21,17 @@ namespace ConfigData
     {
         [XmlAttribute]
         public int ItemID { get; set; }
-        [XmlAttribute]
-        public ItemOverrideType ItemType { get; set; }
         [XmlArray("Data"), XmlArrayItem(typeof(ItemOverrideData)), XmlArrayItem(typeof(WeaponOverrideData))]
-        public List<ItemOverrideData> Data { get; set; }
+        public List<OverrideData> Data { get; set; }
     }
 
     [Serializable]
-    public enum ItemOverrideType
+    public enum OverrideType
     {
         [XmlEnum("NONE")]
         NONE,
+        [XmlEnum("ITEMSTAT")]
+        ITEMSTAT,
         [XmlEnum("WEAPON")]
         WEAPON,
         [XmlEnum("ARMOUR")]
@@ -45,18 +42,27 @@ namespace ConfigData
         BAG
     }
 
-    [XmlInclude(typeof(WeaponOverrideData))]
+
     [Serializable]
-    public class ItemOverrideData
+    public abstract class OverrideData
     {
         [XmlAttribute]
-        public ItemStatType ItemStatType { get; set; }
-        public virtual float Value { get; set; }
+        public OverrideType OverrideType { get; set; }
+        [XmlAttribute]
+        public float Value { get; set; }
     }
 
 
     [Serializable]
-    public class WeaponOverrideData : ItemOverrideData
+    public class ItemOverrideData : OverrideData
+    {
+        [XmlAttribute]
+        public ItemStatType ItemStatType { get; set; }
+    }
+
+
+    [Serializable]
+    public class WeaponOverrideData : OverrideData
     {
         [XmlAttribute]
         public WeaponStatType WeaponStatType { get; set; }
@@ -67,9 +73,15 @@ namespace ConfigData
     [Serializable]
     public enum ItemStatType
     {
+        [XmlEnum("NONE")]
         NONE,
-        WEIGHT,
-        VALUE,
+        [XmlEnum("RAWWEIGHT")]
+        RAWWEIGHT,
+        [XmlEnum("MAXDURABILITY")]
+        MAXDURABILITY,
+        [XmlEnum("BASEVALUE")]
+        BASEVALUE,
+        [XmlEnum("COUNT")]
         // Add whatever you see fit here.
         COUNT,
     }
@@ -136,4 +148,6 @@ namespace ConfigData
         [XmlEnum("MANA_USE_MODIFIER")]
         MANA_USE_MODIFIER
     }
+
+
 }

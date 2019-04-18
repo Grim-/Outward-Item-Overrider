@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <OutwardItemOverrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" DebugMode="true">
-  <ItemOverride ItemID="2100000" ItemType="WEAPON">
+  <ItemOverrides ItemID="2100000">
     <Data>
-	  <WeaponOverrideData WeaponStatType="IMPACT">
-	    <Value>505</Value>
-	  </WeaponOverrideData>
+	  <WeaponOverrideData OverrideType="WEAPON" Value="500" WeaponStatType="IMPACT" />
+	  <WeaponOverrideData OverrideType="WEAPON" Value="51" WeaponStatType="POUCH_BONUS" />
     </Data>
-  </ItemOverride>
+  </ItemOverrides>
 </OutwardItemOverrides>
